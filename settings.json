@@ -23,7 +23,7 @@
     "teeDistanceInFeet": 7 // distance from R10 to ball in feet
   },
   "putting": {
-    "enabled": false,
+    "enabled": true,
     "port": 8888,
     "launchBallTracker": true, // if true, program will launch ball tracking software. If false, you will need to launch it independantly of this program
     "onlyLaunchWhenPutting": true, // if true, program will launch and close depending on club selection. If false, program will launch and stay open

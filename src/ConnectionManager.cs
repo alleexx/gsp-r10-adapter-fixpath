@@ -52,20 +52,23 @@ namespace gspro_r10
       {
         fixpath = true;
         // todo: Use correct logger
-        Console.WriteLine("R10 fixpath enabled!");
+        Console.WriteLine("R10 fixpath enabled test!");
       }
     }
 
     internal void SendShot(OpenConnect.BallData? ballData, OpenConnect.ClubData? clubData)
     {
-      if (fixpath == true)
+      if (fixpath == true && clubData != null &&ballData != null)
       {
-        if (clubData.Path == 20 || clubData.FaceToTarget >=10)
-        // todo: Use correct logger
-        Console.WriteLine("R10 Data possibly wrong: clubData.Path == 20 || clubData.FaceToTarget >=10");
+        if (clubData.Path == 20 || clubData.Path == -20 || clubData.FaceToTarget >=15 || clubData.FaceToTarget <=-15)
         {
+          // todo: Use correct logger
+          Console.WriteLine("R10 Data possibly wrong: clubData.Path == 20 OR clubData.FaceToTarget >=15");
           ballData.SideSpin = 0;
           ballData.SpinAxis = 0;
+          
+          clubData.Path = 0;
+          clubData.FaceToTarget = 0;
         }
       }
       string openConnectMessage = JsonSerializer.Serialize(OpenConnectApiMessage.CreateShotData(

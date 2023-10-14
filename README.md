@@ -1,3 +1,8 @@
+# gsp-r10-adapter-fixpath
+
+Extension of the gspro r10 adapter from matth to ignore some misreads from R10 on path and face angle
+
+
 # gsp-r10-adapter
 
 Utility to bridge R10 launch monitor to GSPro. Supports the following
