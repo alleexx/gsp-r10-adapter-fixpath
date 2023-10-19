@@ -60,7 +60,7 @@ namespace gspro_r10
     {
       if (fixpath == true && clubData != null &&ballData != null)
       {
-        if (clubData.Path == 20 || clubData.Path == -20 || clubData.FaceToTarget >=15 || clubData.FaceToTarget <=-15)
+        if (clubData.Path >= 19 || clubData.Path <= -19 || clubData.FaceToTarget >=15 || clubData.FaceToTarget <=-15)
         {
           // todo: Use correct logger
           Console.WriteLine("R10 Data possibly wrong: clubData.Path == 20 OR clubData.FaceToTarget >=15");
