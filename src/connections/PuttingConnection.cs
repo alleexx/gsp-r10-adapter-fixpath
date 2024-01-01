@@ -138,6 +138,7 @@ namespace gspro_r10
       {
         if (e.Club == OpenConnect.Club.PT)
         {
+          if (!PuttingEnabled)
           StartPutting();
         }
         else
@@ -200,6 +201,7 @@ namespace gspro_r10
           }
 
           PuttingLogger.LogPuttInfo($"Starting putting camera: '{startInfo.FileName} {startInfo.Arguments}' ");
+
           PuttingProcess = Process.Start(startInfo);
 
           if (PuttingProcess == null)

@@ -28,6 +28,8 @@ namespace gspro_r10
 
     private bool fixpath = false;
 
+    private bool lastClubPT = false;
+
     public ConnectionManager(IConfigurationRoot configuration)
     {
       OpenConnectClient = new OpenConnectClient(this, configuration.GetSection("openConnect"));
@@ -51,8 +53,7 @@ namespace gspro_r10
       if (bool.Parse(configuration.GetSection("bluetooth")["fixpath"] ?? "false"))
       {
         fixpath = true;
-        // todo: Use correct logger
-        Console.WriteLine("R10 fixpath enabled test!");
+        BaseLogger.LogMessage("R10 - Fixpath - Fixpath enabled", "Main", LogMessageType.Informational);
       }
     }
 
@@ -62,8 +63,8 @@ namespace gspro_r10
       {
         if (clubData.Path >= 19 || clubData.Path <= -19 || clubData.FaceToTarget >=15 || clubData.FaceToTarget <=-15)
         {
-          // todo: Use correct logger
-          Console.WriteLine("R10 Data possibly wrong: clubData.Path == 20 OR clubData.FaceToTarget >=15");
+          BaseLogger.LogMessage("R10 - Fixpath - ClubData possibly wrong: clubData.Path == 20 OR clubData.FaceToTarget >=15", "Main", LogMessageType.Informational);
+
           ballData.SideSpin = 0;
           ballData.SpinAxis = 0;
           
