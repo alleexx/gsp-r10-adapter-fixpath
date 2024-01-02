@@ -4,6 +4,8 @@ using LaunchMonitor.Proto;
 using gspro_r10.bluetooth;
 using Microsoft.Extensions.Configuration;
 using System.Text;
+using Windows.UI.Notifications;
+using Windows.Graphics.Printing.PrintTicket;
 
 namespace gspro_r10
 {
@@ -12,12 +14,16 @@ namespace gspro_r10
     private static readonly double METERS_PER_S_TO_MILES_PER_HOUR = 2.2369;
     private static readonly float FEET_TO_METERS = 1 / 3.281f;
     private bool disposedValue;
+    private bool ballSpinMeasured = false;
 
     public ConnectionManager ConnectionManager { get; }
     public IConfigurationSection Configuration { get; }
     public int ReconnectInterval { get; }
     public LaunchMonitorDevice? LaunchMonitor { get; private set; }
     public BluetoothDevice? Device { get; private set; }
+    
+    
+    
 
     public BluetoothConnection(ConnectionManager connectionManager, IConfigurationSection configuration)
     {
@@ -134,9 +140,18 @@ namespace gspro_r10
       return null;
     }
 
-    public static BallData? BallDataFromLaunchMonitorMetrics(BallMetrics? ballMetrics)
+    // Changed to non static to allow changing of ball spin measured
+
+    public BallData? BallDataFromLaunchMonitorMetrics(BallMetrics? ballMetrics)
     {
       if (ballMetrics == null) return null;
+
+      // Check if spin type is measure and set closure rate to 1 to indicate this for gspro
+      if (ballMetrics.SpinCalculationType == global::LaunchMonitor.Proto.BallMetrics.Types.SpinCalculationType.Measured)
+        ballSpinMeasured = true;
+      else        
+        ballSpinMeasured = false;
+
       return new BallData()
       {
         HLA = ballMetrics.LaunchDirection,
@@ -146,13 +161,16 @@ namespace gspro_r10
         TotalSpin = ballMetrics.TotalSpin,
         SideSpin = ballMetrics.TotalSpin * Math.Sin(-1 * ballMetrics.SpinAxis * Math.PI / 180),
         BackSpin = ballMetrics.TotalSpin * Math.Cos(-1 * ballMetrics.SpinAxis * Math.PI / 180)
+        
       };
     }
 
-    public static ClubData? ClubDataFromLaunchMonitorMetrics(ClubMetrics? clubMetrics)
+    public ClubData? ClubDataFromLaunchMonitorMetrics(ClubMetrics? clubMetrics)
     {
+      
       if (clubMetrics == null) return null;
-      return new ClubData()
+
+      ClubData myClubData = new ClubData()
       {
         Speed = clubMetrics.ClubHeadSpeed * METERS_PER_S_TO_MILES_PER_HOUR,
         SpeedAtImpact = clubMetrics.ClubHeadSpeed * METERS_PER_S_TO_MILES_PER_HOUR,
@@ -160,6 +178,17 @@ namespace gspro_r10
         FaceToTarget = clubMetrics.ClubAngleFace,
         Path = clubMetrics.ClubAnglePath
       };
+
+      if (ballSpinMeasured){
+        myClubData.ClosureRate = 1;
+        BluetoothLogger.Info("R10 - Fixpath - Spin Type Measured --> Closure Rate = 1");
+      }
+      else {
+        myClubData.ClosureRate = 0;
+        BluetoothLogger.Info("R10 - Fixpath - Spin Type NOT Measured --> Closure Rate = 0");
+      }
+
+      return myClubData;
     }
 
     protected virtual void Dispose(bool disposing)
