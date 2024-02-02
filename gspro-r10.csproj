@@ -30,4 +30,11 @@
     <Protobuf Include="src/bluetooth/proto/LaunchMonitor.proto" ProtoRoot="src/bluetooth/proto" GrpcServices="None" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="MediaFoundation">
+      <HintPath>..\lib\MediaFoundation.dll</HintPath>
+      <HintPath>..\lib\MediaFoundation.Extension.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

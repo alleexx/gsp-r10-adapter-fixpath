@@ -154,6 +154,18 @@ namespace gspro_r10.bluetooth
               BluetoothLogger.Error("Device asleep. Wake device using button (or enable autowake in settings)");
             }
           }
+          if (notification.State.State_ == StateType.Recording)
+          {
+            {
+              BluetoothLogger.Info("State Recording - Starting Video");
+            }
+          }
+          if (notification.State.State_ == StateType.Processing)
+          {
+            {
+              BluetoothLogger.Info("State Processing - Stopping Video");
+            }
+          }
         }
         if (notification.Error != null && notification.Error.HasCode)
         {

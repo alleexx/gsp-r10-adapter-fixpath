@@ -2,6 +2,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using gspro_r10.OpenConnect;
 using Microsoft.Extensions.Configuration;
+using MediaFoundation;
+using System;
 
 namespace gspro_r10
 {
@@ -48,6 +50,9 @@ namespace gspro_r10
       {
         PuttingConnection = new HttpPuttingServer(this, configuration.GetSection("putting"));
         PuttingConnection.Start();
+        // list all connected webcams by index and name
+       
+
       }
       
       if (bool.Parse(configuration.GetSection("bluetooth")["fixpath"] ?? "false"))
@@ -57,6 +62,7 @@ namespace gspro_r10
       }
     }
 
+    
     internal void SendShot(OpenConnect.BallData? ballData, OpenConnect.ClubData? clubData)
     {
       if (fixpath == true && clubData != null &&ballData != null)
@@ -70,6 +76,12 @@ namespace gspro_r10
           
           clubData.Path = 0;
           clubData.FaceToTarget = 0;
+        }
+        if (ballData.HLA >= 20 && ballData.VLA == 0 && ballData.SpinAxis ==-0)
+        {
+          BaseLogger.LogMessage("R10 - Fixpath - BallData possibly wrong: VLA = 0 and HLA Off The Charts with -0 SpinAxis", "Main", LogMessageType.Informational);
+
+          return;
         }
       }
       string openConnectMessage = JsonSerializer.Serialize(OpenConnectApiMessage.CreateShotData(
@@ -118,5 +130,6 @@ namespace gspro_r10
       Dispose(disposing: true);
       GC.SuppressFinalize(this);
     }
+
   }
 }

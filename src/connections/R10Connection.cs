@@ -95,6 +95,7 @@ namespace gspro_r10
         case R10MessageType.SendShot:
           ConnectionManager.SendShot(BallDataFromR10BallData(BallData), ClubDataFromR10ClubData(ClubData));
           CompleteShot();
+          
           response = new SuccessResponse(R10MessageType.SendShot);
           break;
         case R10MessageType.Disconnect:

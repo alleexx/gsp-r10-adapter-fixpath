@@ -1,4 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
+using static System.Net.Mime.MediaTypeNames;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 
 namespace gspro_r10
 {
