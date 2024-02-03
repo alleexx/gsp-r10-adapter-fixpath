@@ -127,8 +127,14 @@ namespace gspro_r10
         ballData,
         clubData
       ), serializerSettings);
-      SendShotImpact(openConnectMessage, "127.0.0.1", 9999);
       OpenConnectClient.SendAsync(openConnectMessage);
+      try{
+        
+        SendShotImpact(openConnectMessage, "127.0.0.1", 9999);
+      }
+      catch (Exception ex){
+        BaseLogger.LogMessage(ex.Message, "Main", LogMessageType.Error);
+      }
     }
 
     public void ClubUpdate(Club club)
