@@ -108,7 +108,6 @@ namespace gspro_r10
           BallDataFromLaunchMonitorMetrics(e.Metrics?.BallMetrics),
           ClubDataFromLaunchMonitorMetrics(e.Metrics?.ClubMetrics)
         );
-        SendShotImpact("Shot Completed", "127.0.0.1", 9999);
 
       };
 
@@ -264,41 +263,7 @@ namespace gspro_r10
     }
 
       
-    public static void SendShotImpact(string message, string serverAddress, int port)
-    {
-        // Create a TCP client
-        TcpClient client = new TcpClient(serverAddress, port);
-        try
-        {
-            
-
-            // Get a stream for writing data
-            NetworkStream stream = client.GetStream();
-
-            // Convert the message to a byte array
-            byte[] bytesToSend = Encoding.UTF8.GetBytes(message);
-
-            // Send the message to the server
-            stream.Write(bytesToSend, 0, bytesToSend.Length);
-
-            Console.WriteLine("Message sent to server: {0}", message);
-
-            // Receive a response from the server (optional)
-            // byte[] buffer = new byte[1024];
-            // int bytesRead = stream.Read(buffer, 0, buffer.Length);
-            // string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-            // Console.WriteLine("Response from server: {0}", response);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error sending message: " + ex.Message);
-        }
-        finally
-        {
-            // Close the client connection
-            client.Close();
-        }
-    }
+    
 
     public void Dispose()
     {
