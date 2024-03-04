@@ -13,6 +13,7 @@ namespace gspro_r10
   {
     private R10ConnectionServer? R10Server;
     private OpenConnectClient OpenConnectClient;
+    private MiniClient MiniClient;
     private BluetoothConnection? BluetoothConnection { get; }
     internal HttpPuttingServer? PuttingConnection { get; }
     public event ClubChangedEventHandler? ClubChanged;
@@ -45,8 +46,22 @@ namespace gspro_r10
         R10Server.Start();
       }
 
+      if (bool.Parse(configuration.GetSection("bluetooth")["fixpath"] ?? "false"))
+      {
+        fixpath = true;
+      }
+
+      if (bool.Parse(configuration.GetSection("mini")["enabled"] ?? "false"))
+      {
+        fixpath = false;
+        MiniClient = new MiniClient(this, configuration.GetSection("mini"));
+        MiniClient.Start();
+      }
+
       if (bool.Parse(configuration.GetSection("bluetooth")["enabled"] ?? "false"))
+      {
         BluetoothConnection = new BluetoothConnection(this, configuration.GetSection("bluetooth"));
+      }
 
       if (bool.Parse(configuration.GetSection("putting")["enabled"] ?? "false"))
       {
@@ -55,12 +70,6 @@ namespace gspro_r10
         // list all connected webcams by index and name
        
 
-      }
-      
-      if (bool.Parse(configuration.GetSection("bluetooth")["fixpath"] ?? "false"))
-      {
-        fixpath = true;
-        BaseLogger.LogMessage("R10 - Fixpath - Fixpath enabled", "Main", LogMessageType.Informational);
       }
     }
     
@@ -103,7 +112,7 @@ namespace gspro_r10
     
     internal void SendShot(OpenConnect.BallData? ballData, OpenConnect.ClubData? clubData)
     {
-      if (fixpath == true && clubData != null &&ballData != null)
+      if (fixpath == true && clubData != null && ballData != null)
       {
         if (clubData.Path >= 19 || clubData.Path <= -19 || clubData.FaceToTarget >=15 || clubData.FaceToTarget <=-15)
         {
